@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+  <changeSet author="yangxs" id="v1.0.0 init_database.">
+
+    <createTable tableName="t_model_project" remarks="模型表">
+      <column name="id" type="varchar(40)" remarks="ID，主键">
+        <constraints nullable="false" primaryKey="true" />
+      </column>
+      <column name="model_name" type="VARCHAR(50)" remarks="模型名称" />
+      <column name="model_parameters" type="text" remarks="模型全局参数" />
+      <column name="model_server_ip" type="VARCHAR(50)" remarks="模型算法执行服务器IP"/>
+      <column name="create_user" type="VARCHAR(50)" remarks="模型创建人"/>
+      <column name="is_deleted" type="INT2" remarks="是否删除（0否，1是）" defaultValue="0"/>
+      <column name="create_time" type="TIMESTAMP" remarks="创建时间"/>
+      <column name="update_time" type="TIMESTAMP" remarks="更新时间"/>
+      <column name="create_by" type="VARCHAR(50)" remarks="创建人"/>
+      <column name="update_by" type="VARCHAR(50)" remarks="修改人"/>
+    </createTable>
+
+    <createTable tableName="t_model_algo" remarks="算法表">
+      <column name="id" type="varchar(40)" remarks="ID，主键">
+        <constraints nullable="false" primaryKey="true" />
+      </column>
+      <column name="model_project_id" type="VARCHAR(40)" remarks="模型ID"/>
+      <column name="model_algo_server_id" type="VARCHAR(40)" remarks="算法所用服务器ID"/>
+      <column name="algo_name" type="VARCHAR(50)" remarks="算法名称"/>
+      <column name="algo_code" type="VARCHAR(50)" remarks="算法代码"/>
+      <column name="step_code" type="VARCHAR(50)" remarks="算法参数配置步骤代码"/>
+      <column name="algo_api_code" type="VARCHAR(200)" remarks="算法接口名称" />
+      <column name="step_parameters_content" type="TEXT" remarks="算法参数配置步骤内容" />
+      <column name="server_type" type="VARCHAR(20)" remarks="算法所需服务器类型（标准服务器，加密狗服务器）" />
+      <column name="algo_run_status" type="INT2" remarks="算法执行状态(初始化：0，运行中：1，运行成功：8，运行失败：9)" />
+      <column name="algo_run_result_desc" type="TEXT" remarks="算法执行结果描述" />
+      <column name="step_relation_status" type="INT2" remarks="步骤影响状态（0,1）" />
+      <column name="is_deleted" type="INT2" remarks="是否删除（0否，1是）" defaultValue="0"/>
+      <column name="create_time" type="TIMESTAMP" remarks="创建时间"/>
+      <column name="update_time" type="TIMESTAMP" remarks="更新时间"/>
+      <column name="create_by" type="VARCHAR(50)" remarks="创建人"/>
+      <column name="update_by" type="VARCHAR(50)" remarks="修改人"/>
+    </createTable>
+
+    <createTable tableName="t_model_omx" remarks="矩阵文件读取缓存">
+      <column name="id" type="varchar(40)" remarks="ID，主键">
+        <constraints nullable="false" primaryKey="true" />
+      </column>
+      <column name="model_project_id" type="VARCHAR(40)" remarks="模型ID"/>
+      <column name="algo_api_code" type="VARCHAR(200)" remarks="算法接口名称" />
+      <column name="file_name" type="VARCHAR(40)" remarks="文件名称" />
+      <column name="matrix_name" type="VARCHAR(40)" remarks="矩阵名称" />
+      <column name="exec_type" type="VARCHAR(40)" remarks="类型（读行：row，读列：col，聚合：aggregate）" />
+      <column name="location" type="INT4" remarks="矩阵的行数或者列数" />
+      <column name="aggregate_index" type="VARCHAR(40)" remarks="小区ID对应中区" />
+      <column name="query_status" type="INT2" remarks="查询状态(等待算法反馈结果：0，已经收到结果：1，矩阵读取失败：9)" />
+      <column name="query_result" type="TEXT" remarks="查询结果" />
+      <column name="is_deleted" type="INT2" remarks="是否删除（0否，1是）" defaultValue="0"/>
+      <column name="create_time" type="TIMESTAMP" remarks="创建时间"/>
+      <column name="update_time" type="TIMESTAMP" remarks="更新时间"/>
+      <column name="create_by" type="VARCHAR(50)" remarks="创建人"/>
+      <column name="update_by" type="VARCHAR(50)" remarks="修改人"/>
+    </createTable>
+
+    <createTable tableName="t_model_algo_server" remarks="模型算法服务器资源表">
+      <column name="id" type="varchar(40)" remarks="ID，主键">
+        <constraints nullable="false" primaryKey="true" />
+      </column>
+      <column name="server_type" type="VARCHAR(20)" remarks="服务器类型（BZ_PC，JMG_PC）" />
+      <column name="ip_address" type="VARCHAR(50)" remarks="服务器IP地址" />
+      <column name="run_status" type="INT2" remarks="服务器运行状态（空闲:0，运行中:1）" />
+      <column name="is_deleted" type="INT2" remarks="是否删除（0否，1是）" defaultValue="0"/>
+      <column name="create_time" type="TIMESTAMP" remarks="创建时间"/>
+      <column name="update_time" type="TIMESTAMP" remarks="更新时间"/>
+      <column name="create_by" type="VARCHAR(50)" remarks="创建人"/>
+      <column name="update_by" type="VARCHAR(50)" remarks="修改人"/>
+    </createTable>
+
+    <createTable tableName="t_model_config" remarks="模型基础配置表">
+      <column name="id" type="varchar(40)" remarks="ID，主键">
+        <constraints nullable="false" primaryKey="true" />
+      </column>
+      <column name="config_key" type="VARCHAR(40)" remarks="配置代码" />
+      <column name="config_value" type="VARCHAR(100)" remarks="配置值" />
+      <column name="config_group" type="VARCHAR(40)" remarks="配置组" />
+      <column name="config_desc" type="VARCHAR(512)" remarks="配置项描述" />
+      <column name="is_deleted" type="INT2" remarks="是否删除（0否，1是）" defaultValue="0"/>
+      <column name="create_time" type="TIMESTAMP" remarks="创建时间"/>
+      <column name="update_time" type="TIMESTAMP" remarks="更新时间"/>
+      <column name="create_by" type="VARCHAR(50)" remarks="创建人"/>
+      <column name="update_by" type="VARCHAR(50)" remarks="修改人"/>
+    </createTable>
+
+    <createTable tableName="t_model_classification" remarks="出行分类基础表">
+      <column name="id" type="varchar(40)" remarks="ID，主键">
+        <constraints nullable="false" primaryKey="true" />
+      </column>
+      <column name="POP_JUDGE" type="VARCHAR(40)" remarks="人群判断" />
+      <column name="POP_TYPE" type="VARCHAR(100)" remarks="人群类型" />
+      <column name="INCOME_TYPE" type="VARCHAR(40)" remarks="收入等级" />
+      <column name="CAR_TYPE" type="VARCHAR(40)" remarks="拥车情况" />
+      <column name="PURPOSE_TYPE" type="VARCHAR(40)" remarks="出行目的" />
+      <column name="is_deleted" type="INT2" remarks="是否删除（0否，1是）" defaultValue="0"/>
+      <column name="create_time" type="TIMESTAMP" remarks="创建时间"/>
+      <column name="update_time" type="TIMESTAMP" remarks="更新时间"/>
+      <column name="create_by" type="VARCHAR(50)" remarks="创建人"/>
+      <column name="update_by" type="VARCHAR(50)" remarks="修改人"/>
+    </createTable>
+
+    <createTable tableName="t_model_classification_project" remarks="出行分类基础表-用户模型">
+      <column name="id" type="varchar(40)" remarks="ID，主键">
+        <constraints nullable="false" primaryKey="true" />
+      </column>
+      <column name="POP_JUDGE" type="VARCHAR(40)" remarks="人群判断" />
+      <column name="POP_TYPE" type="VARCHAR(100)" remarks="人群类型" />
+      <column name="INCOME_TYPE" type="VARCHAR(40)" remarks="收入等级" />
+      <column name="CAR_TYPE" type="VARCHAR(40)" remarks="拥车情况" />
+      <column name="PURPOSE_TYPE" type="VARCHAR(40)" remarks="出行目的" />
+      <column name="VALUE" type="VARCHAR(40)" remarks="数值" />
+      <column name="CROSS_TYPE1" type="VARCHAR(40)" remarks="人群、目的交叉分类" />
+      <column name="CROSS_TYPE2" type="VARCHAR(40)" remarks="人群交叉分类" />
+      <column name="is_deleted" type="INT2" remarks="是否删除（0否，1是）" defaultValue="0"/>
+      <column name="create_time" type="TIMESTAMP" remarks="创建时间"/>
+      <column name="update_time" type="TIMESTAMP" remarks="更新时间"/>
+      <column name="create_by" type="VARCHAR(50)" remarks="创建人"/>
+      <column name="update_by" type="VARCHAR(50)" remarks="修改人"/>
+    </createTable>
+
+  </changeSet>
+</databaseChangeLog>

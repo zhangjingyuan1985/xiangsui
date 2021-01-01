@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sutpc.transpaas.algoserver.dao.ModelAlgoServerMapper">
+
+  <resultMap id="GetIpResult" type="com.sutpc.transpaas.algoserver.entity.ModelAlgoServer">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="ip_address" jdbcType="VARCHAR" property="ipAddress" />
+  </resultMap>
+
+  <select id="getModelIp" resultMap="GetIpResult">
+    select s.id,s.server_type, s.ip_address, COALESCE(p.ip_count,0) ip_count
+    from t_model_algo_server s left join (
+      select model_server_ip, count(*) ip_count from t_model_project where is_deleted = 0 GROUP BY model_server_ip
+    ) p on s.ip_address = p.model_server_ip
+    where s.is_deleted=0 and s.server_type=#{serverType}
+    ORDER BY ip_count asc
+  </select>
+
+  <select id="selectPageVo" resultType="com.sutpc.transpaas.algoserver.entity.ModelAlgoServer">
+    select * from t_model_algo_server where is_deleted = 0 and server_type=#{serverType}
+  </select>
+
+</mapper>

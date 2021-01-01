@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sutpc.transpaas.algoserver.dao.GeoLinkMapper">
+
+
+  <select id="queryWktByLine" resultType="com.sutpc.transpaas.algoserver.entity.GeoLink">
+    select
+    v.line,v.speed,v.volume,
+    l.from_id, l.to_id, l.wkt
+    from t_segment_volume v
+    inner join geo_link l on v.segment = l.from_id || '-' || l.to_id
+    where v.model_project_id=#{taskId}
+    and v.time_segment = #{timeSegment}
+    and v.line= #{line}
+  </select>
+
+</mapper>

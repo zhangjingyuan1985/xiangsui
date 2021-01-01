@@ -1,0 +1,4 @@
+com\sutpc\transpaas\algoserver\VolumeServiceTest.class
+com\sutpc\transpaas\algoserver\ModelAlgoServerServiceTest.class
+com\sutpc\transpaas\algoserver\ModelProjectServiceTest.class
+com\sutpc\transpaas\algoserver\AlgoParameterServiceTest.class
